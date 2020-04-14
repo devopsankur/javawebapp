@@ -1,10 +1,10 @@
 node{
-     
+  
     stage('SCM Checkout'){
         git url: 'https://github.com/devopsankur/javawebapp.git',branch: 'master'
     }
     
-    stage(" Maven Clean Package"){
+    stage('Build'){
       def mavenHome =  tool name: "maven-3", type: "maven"
       def mavenCMD = "${mavenHome}/bin/mvn"
       sh "${mavenCMD} clean package"
@@ -12,7 +12,7 @@ node{
     } 
     
     
-    stage('Build Docker Image'){
+    stage('Create Docker Image'){
         sh 'docker build -t ankur7827/java-web-app .'
     }
     
@@ -23,7 +23,7 @@ node{
         sh 'docker push ankur7827/java-web-app'
      }
      
-      stage('Run Docker Image In Dev Server'){
+      stage('Run Docker Image In Tomcat Server'){
         
         def dockerRun = ' docker run  -d -p 8080:8080 --name java-web-app ankur7827/java-web-app'
          
